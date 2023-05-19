@@ -49,6 +49,8 @@ class LatchingRelay:
 	:param initial_value: The initial state to set the relay to (:py:obj:`True` = On).
 	"""
 
+	_value: bool
+
 	def __init__(self, on_pin: Pin, off_pin: Pin, initial_value: bool = False):
 		self._on = digitalio.DigitalInOut(on_pin)
 		self._on.switch_to_output()
@@ -63,10 +65,14 @@ class LatchingRelay:
 
 	@property
 	def value(self) -> bool:
+		"""
+		The current state of the relay.
+		"""
+
 		return self._value
 
 	@value.setter
-	def value(self, value: bool):
+	def value(self, value: bool) -> None:
 		if value and not self._value:
 			self.turn_on()
 		elif not value and self._value:
